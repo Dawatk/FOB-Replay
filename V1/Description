@@ -1,0 +1,4 @@
+
+This version of the FobReplay uses one flow graph where you first disable the TX flow to only run the RX flow, capturing and saving to the selected file.
+Next, you close the running flow, disable the RX flow, enable and run the TX flow to then TX from the selected file.
+
