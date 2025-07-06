@@ -1,1 +1,38 @@
+# Working Description #
+  Most of this will be the same as V1 with four notable differences: "capture" variable, GUI toggle switch, 2x multiply const's. This version is meant to work    just as V1 does but without the user leaving the GUI.
 
+  The GUI toggle switch facilitates the switching within the GUI, the switch drives the two multiply constant blocks, one directly and the other via the          capture variable. By default the toggle switch is set to 0, the TX flow uses this value directly such that when the switch is in it's "off" state, the TX       flow is closed. The RX flow on the other hand uses the "capture" variable as it's multiply const variable. Capture uses a simple if statement (shown below),    to accomplish an "inversion" of the toggle switch output, fulfilling the need for a flowgraph selector.
+
+# Flowgraph Description #
+
+  Variables-
+    Samp_Rate: 1MHz
+    Freq: 315.005MHz
+    bw: 4MHz
+    capture: 1 if toggle == 0 else 0
+
+  QT GUI Toggle Switch-
+    Provides the flowgraph selector action with a Green(Off)/Red(ON) switch. This switch output is used by the multiply constant blocks to act as a simple          open or closed switch.
+
+  QT GUI Chooser-
+    Provides three options for usable file locations to store and read data from, with one file location used as standby. I include the standby file in this        case because the file write append is set to overwrite, meaning the file sink will always overwrite the file location it is set to. The gui chooser, with       the standby file set to the default option, configures the file sink to start logging (overwriting) on that file instead of a possible good capture file.
+
+  UHD: USRP Source-
+    Center frequency, bandwidth, and sample rate are all set from variables above. I settled on an absolue gain of 22dB because thats what worked with my           squelch setting at the time, this can be changed to work as necessary.
+
+  QT GUI Frequency Sink-
+    I use these like Prints in a python script, they provide me with sanity checks when debugging and for the final sink it's nice to see what quality of           signal you're capturing.
+
+  Low Pass Filter-
+    Decimation and gain are set to 1 because I'm only trying to filter, not downsample or amplify the signal. My cutoff freq and transition width are set so        low & I'm using a Blackman window (instead of hamming) because I wanted a sharp filter, I plan on experimenting with thinner passbands but for now this         works perfectly.
+    *Note* - We're able to use the LPF here because the USRP source outputs complex baseband I/Q data, so the LPF acts like a Bandpass.
+
+  File Sink-
+    Takes the GUI Chooser output to determine the file it writes to.
+
+---------
+
+  File Source-
+    Uses same file select variable from the gui chooser to choose which file it outputs
+
+  Frequency sink and UHD source follow the same logic from above aside from the UHD sink using a normalized gain of 1 for maximum gain on transmission.
