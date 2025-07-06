@@ -3,6 +3,8 @@
 
   The GUI toggle switch facilitates the switching within the GUI, the switch drives the two multiply constant blocks, one directly and the other via the          capture variable. By default the toggle switch is set to 0, the TX flow uses this value directly such that when the switch is in it's "off" state, the TX       flow is closed. The RX flow on the other hand uses the "capture" variable as it's multiply const variable. Capture uses a simple if statement (shown below),    to accomplish an "inversion" of the toggle switch output, fulfilling the need for a flowgraph selector.
 
+  This flow doesn't work correctly at the moment unfortunately. I know it's because I'm messing up the UHD source/sink and not switching between the source and   sink (if possible) correctly. This never transmits and I haven't found a good way to enable/disable the UHD blocks to create the necessary switching between    TX/RX, I even used the TX/RX output on my device and that didn't work.
+
 # Flowgraph Description #
 
   Variables-
